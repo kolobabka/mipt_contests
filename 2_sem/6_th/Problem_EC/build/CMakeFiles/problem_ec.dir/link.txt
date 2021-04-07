@@ -1,0 +1,1 @@
+/bin/gcc-9 -g   CMakeFiles/problem_ec.dir/problem_ec.c.o  -o problem_ec  -lm 
