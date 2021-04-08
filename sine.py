@@ -1,7 +1,7 @@
 from   num2dac import num2dac
 from   DAC     import *
 import numpy as np
-import time
+from time import sleep
 from math import sin, pi
 import matplotlib
 import matplotlib.pyplot as plt
@@ -15,15 +15,24 @@ def CreateSine(frequency, time, samplingFrequency):
     values = times.copy()
     for i in range(len(values)):
         values[i] = sin(times[i] * omega)
-    print(values)
+    #print(values)
     plt.grid()
     plt.scatter(times, values)
     plt.show()
     
+    delay = 1/float(samplingFrequency)
+
+    for x in values:
+        num2dac(int(255 * x))
+        sleep(delay)
+    
 
 def main():
-    frequency = int(input())
-    time      = int(input())
-    CreateSine(frequency, time, 100)
+    initGpio()
+    frequency = int(input("Частота: "))
+    time      = int(input("Время: "))
+    sample    = int(input("Частота дискретизации: "))
+    CreateSine(frequency, time, sample)
+    resetGpio()
 
 main()

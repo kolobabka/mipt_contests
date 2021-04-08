@@ -8,11 +8,14 @@ def dec2bin(dec_number):
     return bits
 
 def num2dac(dec_number):
+    clearLed()
     bits = dec2bin(dec_number)
-    for i in range(len(bits)): WRITE(pins[7 - i], bits[i])
+    for i in range(len(bits)): WRITE(7 - i, bits[i])
 
 def main():
     
+    initGpio()
+
     while True:
         try:
             print("Введите число: ", end="")
@@ -28,10 +31,10 @@ def main():
                 continue
 
             num2dac(number)
-            print(out)
 
         except KeyboardInterrupt:
             print("\nСпасибо за использование!")
+            resetGpio()
             quit()
 
 if __name__ == "__main__":
