@@ -121,7 +121,7 @@ int main (int argc, char** argv)
     if (req[i] == ' ')
       req[i] = '\0';
   }
-
+    
   req[len_req] = '\0';
   //
   //printf("hash = %d\n", Hash_of_Char (req, strlen (req)));
