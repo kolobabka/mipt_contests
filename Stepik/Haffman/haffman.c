@@ -46,7 +46,7 @@ int code[26] = {0};
 int main ()
 {
   int len = 0;
-  char word[10010] = {};
+  char* word = (char*) calloc (200001, sizeof (char));
   Result result = { 0, 0, NULL };
   Alp* letters[26] = {};
 
@@ -70,6 +70,7 @@ int main ()
   for (int i = result.num_let; i < 26; i++)
     free (letters[i]);
 
+  free (word);
   return 0;
 }
 //..............................................................................
