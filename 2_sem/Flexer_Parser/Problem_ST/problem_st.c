@@ -16,7 +16,7 @@ struct node_t* build_syntax_tree (struct lex_array_t lexarr)
   if (state != lexarr.size)
   {
 	//printf("THIS IS NOT THE END! cur state is = %d !\n", state);
-    free (root);
+    free_syntax_tree (root);
 	  return NULL;	
   }
   return root;
@@ -178,8 +178,8 @@ struct node_t* Par_Term (struct lex_array_t lexarr)
 
     if (node == NULL)
       return node;
-      
-    if (lexarr.lexems[state].lex.b == RBRAC)
+
+    if (state <= lexarr.size - 1 && lexarr.lexems[state].lex.b == RBRAC)
         state++;
 	  else
     {
