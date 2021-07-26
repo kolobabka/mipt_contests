@@ -20,6 +20,7 @@ struct lex_array_t lex_string (const char *str)
 {
   assert (str != NULL);
 
+  char digit_arr[32] = {0};
   struct lex_array_t larr = { malloc (ICAP * sizeof (struct lexem_t)), ICAP, 0};
   assert (larr.lexems != NULL);
 

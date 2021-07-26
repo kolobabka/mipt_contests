@@ -10,6 +10,7 @@ int main()
   int result = 0;
   struct lex_array_t larr;
   struct node_t* stree = NULL;
+  struct node_t* root = NULL;
   char inp[MAXLEN] = {0};
 
   res = scanf("%1023c", inp);
@@ -19,24 +20,28 @@ int main()
   larr = lex_string(inp);
   printf ("larr.size = %d\n", larr.size);
 
-  if (larr.lexems == NULL) {
+  if (larr.lexems == NULL) 
+  {
     printf("ERROR\n");
     return 0;
   }
-
-  //dump_lexarray (larr);
-
+  
   stree = build_syntax_tree (larr);
-
-  printf ("nice cock = %p\ndata = %d\n", stree, stree->data.u.op);
-  // printf ("nice cock = %p\ndata = %d\n", stree->left->left, stree->left->right->data.u.d);
-  Print_Tree (stree);
+  if (stree == NULL)
+  {
+    free( larr.lexems);
+    printf ("ERROR\n");
+    return 0;
+  }
   
-  //result = calc_result (stree);
+  root = stree;
   
-  //printf ("%d\n", result);
+  result = calc_result (stree);
   
-  //free_syntax_tree (stree);
-  free(larr.lexems);
+  printf ("ptr = %p\n", stree); 
+  printf ("%d\n", result);
+  
+  free_syntax_tree (root);
+  free( larr.lexems);
   return 0;
 }
