@@ -165,13 +165,20 @@ struct node_t* Par_Mult (struct lex_array_t lexarr)
 struct node_t* Par_Term (struct lex_array_t lexarr)
 {
   struct node_t* node = NULL;
+
+  if (state > lexarr.size - 1)
+    return node;
   
   if (lexarr.lexems[state].kind == BRACE && lexarr.lexems[state].lex.b == LBRAC)
   {
-    if (state < lexarr.size - 1)
+    if (state <= lexarr.size - 1)
       state++;
 
     node = Par_Expr (lexarr); 
+
+    if (node == NULL)
+      return node;
+      
     if (lexarr.lexems[state].lex.b == RBRAC)
         state++;
 	  else
