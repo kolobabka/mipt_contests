@@ -18,14 +18,15 @@ static void Inc_Size (struct lex_array_t* larr)
 
 struct lex_array_t lex_string (const char *str)
 {
-  assert (str != NULL);
+  assert(str != NULL);
 
-  char digit_arr[32] = {0};
   struct lex_array_t larr = { malloc (ICAP * sizeof (struct lexem_t)), ICAP, 0};
-  assert (larr.lexems != NULL);
+  assert(larr.lexems != NULL);
 
   for (int i = 0; i < strlen (str); i++)
   {
+    //printf("larr->size = %d\n", larr.size);
+    //printf("larr->capacity = %d\n", larr.capacity);
     switch (str[i]) {
       case ' ' : break;
       case '\n': break;
@@ -107,9 +108,9 @@ static void print_brace (enum braces_t bracetype)
   }
 }
 
-static void print_num (int n)
+static void print_num(int n)
 {
-  printf (" NUMBER:%d", n);
+  printf(" NUMBER:%d", n);
 }
 
 void print_lexem(struct lexem_t lxm)
@@ -123,12 +124,11 @@ void print_lexem(struct lexem_t lxm)
   }
 }
 
-void dump_lexarray (struct lex_array_t pl)
+void dump_lexarray(struct lex_array_t pl)
 {
   int i = 0;
-  assert (pl.lexems != NULL);
+  assert(pl.lexems != NULL);
 
   for (i; i < pl.size; ++i)
-    print_lexem (pl.lexems[i]);
-  printf("\n");
+    print_lexem(pl.lexems[i]);
 }

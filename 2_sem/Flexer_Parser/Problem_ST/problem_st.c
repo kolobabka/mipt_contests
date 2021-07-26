@@ -47,6 +47,9 @@ int calc_result(struct node_t* top)
 
 void free_syntax_tree(struct node_t* top)
 {
+  if (top == NULL)
+    return;
+    
   if (top->left)
     free_syntax_tree (top->left);
   if (top->right)
@@ -95,7 +98,7 @@ struct node_t* Par_Expr (struct lex_array_t lexarr)
     if (e == NULL)
     {
       free_syntax_tree (root);
-      free (m);
+      free_syntax_tree (m);
       return e;
     }
 
@@ -147,7 +150,7 @@ struct node_t* Par_Mult (struct lex_array_t lexarr)
     if (e == NULL)
     {
       free_syntax_tree (root);
-      free (m);
+      free_syntax_tree (m);
       return e;
     }
 
@@ -177,7 +180,7 @@ struct node_t* Par_Term (struct lex_array_t lexarr)
         state++;
 	  else
     {
-      free (node);
+      free_syntax_tree (node);
 		  return NULL;
     }
   }
@@ -198,7 +201,7 @@ struct node_t* Par_Term (struct lex_array_t lexarr)
     }
     else
     {
-      free (node);
+      free_syntax_tree (node);
       return NULL;
     }
   }

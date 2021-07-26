@@ -18,11 +18,11 @@ int main()
 
   // lex to array of lexems
   larr = lex_string(inp);
-  printf ("larr.size = %d\n", larr.size);
 
   if (larr.lexems == NULL) 
   {
     printf("ERROR\n");
+    printf ("ebat..\n");
     return 0;
   }
   
@@ -37,9 +37,8 @@ int main()
   root = stree;
   
   result = calc_result (stree);
-  
-  printf ("ptr = %p\n", stree); 
-  printf ("%d\n", result);
+
+  printf ("result = %d\n", result);
   
   free_syntax_tree (root);
   free( larr.lexems);
