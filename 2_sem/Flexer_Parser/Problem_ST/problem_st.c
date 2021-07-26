@@ -104,8 +104,6 @@ struct node_t* Par_Expr (struct lex_array_t lexarr)
 
     root->left = m;
     root->right = e;
-    m->parent = root;
-    e->parent = root;
     
     m = root;
 	
@@ -156,8 +154,6 @@ struct node_t* Par_Mult (struct lex_array_t lexarr)
 
     root->left = m;
     root->right = e;
-    m->parent = root;
-    e->parent = root;
     
     m = root;
 	

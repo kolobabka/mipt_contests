@@ -18,9 +18,7 @@ struct node_data_t {
 struct node_t {
   struct node_t* left;
   struct node_t* right;
-  struct node_t* parent;
   struct node_data_t data;
-  int res;
 };
 
 struct node_t* build_syntax_tree (struct lex_array_t lexarr);

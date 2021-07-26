@@ -22,7 +22,6 @@ int main()
   if (larr.lexems == NULL) 
   {
     printf("ERROR\n");
-    printf ("ebat..\n");
     return 0;
   }
   
