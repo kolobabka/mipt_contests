@@ -6,7 +6,7 @@
 typedef struct alphabet {
 
   char letter;
-  int bytecode[32];
+  int bytecode[216];
   int bytecode_len;
   struct alphabet* left;
   struct alphabet* right;
@@ -34,8 +34,8 @@ int main ()
 {
   Result result = {0, 0, NULL};
   int check = 0, len = 0;
-  Alp* letters[26] = {};
-  char word[10010] = {};
+  Alp* letters[27] = {0};
+  char word[10010] = {0};
 
   for (int i = 0; i < 26; i++)
   {
@@ -51,10 +51,10 @@ int main ()
   Tree_Maker (letters, &result);
   Decoder (letters, &result, word, len);
 
-  // Free_Tree (result.top);
-  //
-  // for (int i = result.num_let; i < 26; i++)
-  //   free (letters[i]);
+  Free_Tree (result.top);
+  
+  for (int i = result.num_let; i < 26; i++)
+    free (letters[i]);
 
 }
 //..............................................................................
@@ -62,7 +62,7 @@ int main ()
 int Letters_Fill (Alp* letters[], Result* result, char word[])
 {
   int check = 0, len = 0;
-  char let;
+  int let;
   let = getchar ();
   for (int i = 0; i < result->num_let; i++)
   {
@@ -124,6 +124,7 @@ void Tree_Maker (Alp* letters[], Result* result)
     {
       if (letters[i]->bytecode[j] == 0)
       {
+        assert (node);
         if (node->left)
           node = node->left;
         else
@@ -134,6 +135,7 @@ void Tree_Maker (Alp* letters[], Result* result)
       }
       else
       {
+        assert (node);
         if (node->right)
           node = node->right;
         else
@@ -143,6 +145,8 @@ void Tree_Maker (Alp* letters[], Result* result)
         }
       }
     }
+
+    assert (node);
     if (letters[i]->bytecode[letters[i]->bytecode_len - 1] == 0)
       node->left = letters[i];
     else
@@ -183,6 +187,9 @@ void Decoder (Alp* letters[], Result* result, char word[], int len)
 //..............................................................................
 void Free_Tree (Alp* node)
 {
+  if (node == NULL)
+    return;
+
   if (node->left)
     Free_Tree (node->left);
 

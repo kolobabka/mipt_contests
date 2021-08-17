@@ -101,7 +101,6 @@ struct instr_t read_instr (int* check)
   int res = 0;
   char mnem[64];
 
-
   res = scanf ("%s ", mnem);
   if (res != 1)
   {

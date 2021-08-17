@@ -13,83 +13,51 @@ struct list_node {
 };
 //..............................................................................
 //..............................................................................
-struct hash_cell
+typedef struct Hash_cell
 {
-    struct hash_cell* next;
-    struct hash_cell* prev;
+    struct Hash_cell* next;
+    struct Hash_cell* prev;
     struct list_node* item;
 
-};
+} hash_cell;
 //..............................................................................
 //..............................................................................
 
 //..............................................................................
 //..............................................................................
-int Hash_of_Data (int data, int size);
-int Cache (int size, int num);
-struct list_node* Search_List (struct list_node** cells, int request, int size);
+int Hash_of_Data (int data);
+int Cache (int size, int num, hash_cell** table);
+struct list_node* Search_List (hash_cell** table, int request, int size);
 struct list_node* Move_To_Start (struct list_node* start, struct list_node* cur);
 //..............................................................................
 //..............................................................................
 int main ()
 {
-  struct list_node* start = NULL;
-  struct list_node* tmp = NULL;
+  hash_cell** table = NULL;
 
+  int len_table = 2137;
   int size = 0;
   int num = 0;
   int result = 0;
 
-  assert (scanf ("%d%d", &size, &num));
+  assert (scanf ("%d%d", &size, &num) == 2);
 
-  result = Cache (size, num);
+  table = (hash_cell**) calloc (len_table, sizeof (hash_cell*));
+  assert (table);
+
+  for (int i = 0; i < len_table; i++)
+  {
+    table[i] = (hash_cell*) calloc (1, sizeof (hash_cell));
+    assert (table[i]);
+  }
+
+  result = Cache (size, num, table);
 
   printf("%d\n", result);
-  // tmp = start;
-  //
-  // for (int i = 0; i < 10; i++)
-  // {
-  //   tmp->data = i;
-  //   tmp->next = (struct list_node*) calloc (1, sizeof (struct list_node));
-  //
-  //   tmp->next->prev = tmp;
-  //   tmp = tmp->next;
-  //
-  // }
-  // tmp = start;
-  //
-  // for (int i = 0; i < 10; i++)
-  // {
-  //   printf("%d ", tmp->data);
-  //   tmp = tmp->next;
-  // }
-  // printf("\n");
-  //
-  // start = Move_To_Start (start, tmp->prev);
-  //
-  // tmp = start;
-  //
-  // for (int i = 0; i < 10; i++)
-  // {
-  //   printf("%d ", tmp->data);
-  //   tmp = tmp->next;
-  // }
-  // printf("\n");
-  //
-  // while (tmp)
-  // {
-  //   printf("%d ", tmp->data);
-  //   tmp = tmp->prev;
-  // }
-  //
-  // tmp = Search_List (start, 5);
-  //
-  // printf("qwer = %d\n", tmp->data);
-
 
 }
 
-int Cache (int size, int num)
+int Cache (int size, int num, hash_cell** table)
 {
   int request = 0;
   int cache_hit = 0;
@@ -97,20 +65,19 @@ int Cache (int size, int num)
   int key = 0;
 
   struct list_node* cur = NULL;
-  struct hash_cell* tmp_hash = NULL;
   struct list_node* start = NULL;
   struct list_node* end = NULL;
   struct list_node* tmp = NULL;
-  struct hash_cell* cells = NULL;
+  hash_cell* tmp_hash = NULL;
 
-  scanf ("%d", &request);
+  assert (scanf ("%d", &request) == 1);
+
 
   cur = (struct list_node*) calloc (1, sizeof (struct list_node));
-  cells = (struct hash_cell*) calloc (size, sizeof (struct hash_cell));
 
-  key = Hash_of_Data (request, size);
+  key = Hash_of_Data (request);
 
-  cells[key].item = cur;
+  table[key]->item = cur;
 
   cur->data = request;
   start = cur;
@@ -120,7 +87,7 @@ int Cache (int size, int num)
   {
     scanf ("%d", &request);
 
-    cur = Search_List (cells, request, size);
+    cur = Search_List (table, request, size);
     if (cur)
     {
       cache_hit++;
@@ -134,38 +101,61 @@ int Cache (int size, int num)
       if (list_size < size)
       {
         start->prev = (struct list_node*) calloc (1, sizeof (struct list_node));
+        assert (start->prev);
         start->prev->next = start;
         start = start->prev;
         start->data = request;
         list_size++;
         key = Hash_of_Data (request);
-        if (!cells[key].item)
-          cells[key].item = (start);
+        if (table[key]->item == NULL)
+        {
+          table[key]->item = start;
+        }
         else
         {
-          tmp_hash = (struct hash_cell*) calloc (1, sizeof (struct hash_cell));
+          tmp_hash = (hash_cell*) calloc (1, sizeof (hash_cell));
 
-          if (cells[key].next)
+          if (table[key]->next)
           {
-            cells[key].next->prev = tmp_hash;
-            tmp_hash->next = cells[key].next;
-            cells[key].next = tmp_hash;
-            tmp_hash->prev = cells[key];
+            table[key]->next->prev = tmp_hash;
+            tmp_hash->next = table[key]->next;
+            table[key]->next = tmp_hash;
+            tmp_hash->prev = table[key];
+            table[key]->item = start;
           }
           else
           {
-            cells[key].next = tmp_hash;
-            tmp_hash = cells[key];
+            table[key]->next = tmp_hash;
+            tmp_hash->item = start;
+            tmp_hash->prev = table[key];
           }
         }
-
-
-
-
-
       }
       else
       {
+        key = Hash_of_Data (end->data);
+        tmp_hash = table[key];
+        printf("gay = table[%d]->item = %p\n", key, table[key]->item);
+
+        while (tmp_hash->item != end)
+          tmp_hash = tmp_hash->next;
+
+        if (tmp_hash->prev)
+        {
+          tmp_hash->prev->next = tmp_hash->next;
+          if (tmp_hash->next)
+            tmp_hash->next->prev = tmp_hash->prev;
+        }
+
+        if (tmp_hash->next)
+        {
+          table[key] = tmp_hash->next;
+          table[key]->prev = NULL;
+        }
+
+        free (tmp_hash->item);
+        tmp_hash->item = NULL;
+
         end->data = request;
         end = end->prev;
 
@@ -185,27 +175,27 @@ int Cache (int size, int num)
 }
 //..............................................................................
 //..............................................................................
-struct list_node* Search_List (struct hash_cell* cells, int request, int size)
+struct list_node* Search_List (hash_cell** table, int request, int size)
 {
   int key = 0;
-  struct hash_cell cell;
+  hash_cell* cell;
 
   key = Hash_of_Data (request);
-  cell = cells[key];
+  cell = table[key];
 
-  if (cell.item == NULL)
-    return 0;
+  if (cell->item == NULL)
+    return NULL;
 
-  while (cell.next)
+  while (cell->next)
   {
-    if (cell.item->data == request)
-      return cell.item;
+    if (cell->item->data == request)
+      return cell->item;
 
-    cell = cell.next;
+    cell = cell->next;
   }
 
-  if (cell.item->data == request)
-    return cell.item;
+  if (cell->item->data == request)
+    return cell->item;
 
   return NULL;
 }
@@ -232,11 +222,12 @@ struct list_node* Move_To_Start (struct list_node* start, struct list_node* cur)
   return cur;
 }
 
-int Hash_of_Data (int data, int size)
+int Hash_of_Data (int data)
 {
     int key = 0;
 
-    int prime   = 2909;
+    int size = 2137;
+    int prime = 2909;
     int coeff_1 = 211;
     int coeff_2 = 521;
 
