@@ -27,7 +27,8 @@ void Table_Destructor (Hash_cell** table, int len_table);
 List* Search_List (Hash_cell** table, int request);
 void Add_Hash_Table (Hash_cell** table, List* cur);
 int Cache (int size, int num, Hash_cell** table);
-List* Move_To_Start (List** start, List** cur);
+void Move_To_Start (List** start, List** cur);
+void List_Destructor_t (Hash_cell* top);
 void List_Destructor (List* start);
 void Print_List (List* start);
 int Hash_of_Data (int data);
@@ -37,7 +38,7 @@ int main () {
 
   Hash_cell** table = NULL;
 
-  int len_table = 2137;
+  int len_table = 21373;
   int size = 0;
   int num = 0;
   int result = 0;
@@ -95,7 +96,10 @@ int Cache (int size, int num, Hash_cell** table) {
     if (cur)  {
 
       cache_hit++;
-      end = Move_To_Start (&start, &cur);
+      if (cur == end && cur != start)
+        end = end->prev;
+
+      Move_To_Start (&start, &cur);
 
     }
     else  {
@@ -172,10 +176,10 @@ int Hash_of_Data (int data) {
 
     int key = 0;
 
-    int size = 2137;
-    int prime = 2909;
+    int size = 21373;
+    int prime = 29091;
     int coeff_1 = 211;
-    int coeff_2 = 521;
+    int coeff_2 = 5211;
 
     key = ((coeff_1 * data + coeff_2) % prime) % size;
 
@@ -183,22 +187,19 @@ int Hash_of_Data (int data) {
 }
 //..............................................................................
 //..............................................................................
-List* Move_To_Start (List** start, List** cur)  {
+void Move_To_Start (List** start, List** cur)  {
 
-  List* end = NULL;
+  //List* end = NULL;
   assert (*start);
   assert (*cur);
 
-  end = *start;
-
-  while (end->next)
-    end = end->next;
+  // end = *start;
+  //
+  // while (end->next)
+  //   end = end->next;
 
   if (*cur == *start)
-    return end;
-
-  if (end == *cur)
-    end = (*cur)->prev;
+    return;
 
   (*cur)->prev->next = (*cur)->next;
 
@@ -210,7 +211,7 @@ List* Move_To_Start (List** start, List** cur)  {
   (*cur)->prev = NULL;
   *start = *cur;
 
-  return end;
+  return;
 }
 //..............................................................................
 //..............................................................................
@@ -229,21 +230,27 @@ void Add_Hash_Table (Hash_cell** table, List* cur) {
     tmp->item = cur;
     return;
   }
+  tmp->prev = (Hash_cell*) calloc (1, sizeof (Hash_cell));
+  assert (tmp->prev);
 
-  while (tmp->next)
-    tmp = tmp->next;
+  tmp->prev->next = tmp;
+  table[key] = tmp->prev;
+  table[key]->item = cur;
+  // while (tmp->next)
+  //   tmp = tmp->next; //STUPID PLACE :(
+  //
+  // tmp->next = (Hash_cell*) calloc (1, sizeof (Hash_cell));
+  // assert (tmp->next);
 
-  tmp->next = (Hash_cell*) calloc (1, sizeof (Hash_cell));
-  assert (tmp->next);
-
-  tmp->next->item = cur;
-  tmp->next->prev = tmp;
+  // tmp->next->item = cur;
+  // tmp->next->prev = tmp;
 }
 //..............................................................................
 //..............................................................................
 List* Delete_From_Table (Hash_cell** table, List** start, List** end, int request)
 {
   Hash_cell* tmp = NULL;
+  List* tmp_p = NULL;
   int key = 0;
   assert (table);
   assert (end);
@@ -255,6 +262,7 @@ List* Delete_From_Table (Hash_cell** table, List** start, List** end, int reques
 
     if (tmp->next == NULL)
       tmp->item = NULL; //ATTENTION!!!
+
     else  {
 
       table[key] = tmp->next;
@@ -277,11 +285,13 @@ List* Delete_From_Table (Hash_cell** table, List** start, List** end, int reques
 
   (*end)->data = request;
 
-  (*end) = Move_To_Start (start, end);
+  tmp_p = (*end)->prev;
+
+  Move_To_Start (start, end);
 
   Add_Hash_Table (table, *start);
 
-  return (*end);
+  return tmp_p;
 }
 //..............................................................................
 //..............................................................................
@@ -299,23 +309,6 @@ void Print_List (List* start) {
 }
 //..............................................................................
 //..............................................................................
-// void List_Destructor (List* start) {
-//
-//   assert (start);
-//
-//   while (start->next) {
-//
-//     start = start->next;
-//     free (start->prev);
-//   }
-//
-//   if (start->prev)
-//     free (start->prev);
-//
-//   free (start);
-// }
-//..............................................................................
-//..............................................................................
 void Table_Destructor (Hash_cell** table, int len_table) {
 
   Hash_cell* tmp = NULL;
@@ -325,16 +318,7 @@ void Table_Destructor (Hash_cell** table, int len_table) {
 
     tmp = table[i];
 
-    while (tmp->next) {
-
-      tmp = tmp->next;
-      free (tmp->prev);
-    }
-
-    if (tmp->prev)
-      free (tmp->prev);
-
-    free (tmp);
+    List_Destructor_t (tmp);
   }
 
   free (table);
@@ -350,3 +334,18 @@ void List_Destructor (List* top) {
   free (top);
   return;
 }
+//..............................................................................
+//..............................................................................
+void List_Destructor_t (Hash_cell* top)
+{
+  if (top == NULL)
+  {
+    return;
+  }
+
+  List_Destructor_t (top->next);
+  free (top);
+  return;
+}
+//..............................................................................
+//..............................................................................
