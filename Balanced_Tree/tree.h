@@ -13,7 +13,7 @@
 //----------------------------------------
 typedef unsigned int KeyType; //Use type "KeyType" instead of the basic type "unsigned int"
 typedef double       InfoType;
-typedef char         Balance;
+typedef int         Balance;
 //----------------------------------------
 //----------------------------------------
 // Declarations of structers and enums
@@ -27,7 +27,8 @@ typedef enum TreeErrors {
 //----------------------------------------
 typedef struct Tree {
 
-    Balance        difference;
+    Balance       difference;
+    int           height;
   // Key field
     KeyType        key;
   // Address fields
@@ -52,6 +53,15 @@ typedef struct Root {
 //----------------------------------------
 //----------------------------------------
 //Prototypes of functions
-TreeErrors InsertIntoTree (Root* mainRoot, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3);
+Tree* InsertIntoTree (Tree* mainRoot, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3);
 TreeErrors TreeInit (Root* mainRoot);
+Tree* RotateLeft (Tree* balanceNode);
 void PrintTreeErr (TreeErrors err);
+TreeErrors FixHeight (Tree* node);
+Tree* TreeBalance (Tree* node);
+Tree* RotateRight (Tree* node);
+int Difference (Tree* node);
+Tree* TreeInit_t ();
+Tree* FindMin (Tree* node);
+Tree* DeleteMinElen (Tree* node);
+Tree* DeleteElem (Tree* node, KeyType key);

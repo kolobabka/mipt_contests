@@ -6,7 +6,7 @@
 typedef struct alphabet {
 
   char letter;
-  int bytecode[216];
+  int bytecode[1024];
   int bytecode_len;
   struct alphabet* left;
   struct alphabet* right;
@@ -35,9 +35,9 @@ int main ()
   Result result = {0, 0, NULL};
   int check = 0, len = 0;
   Alp* letters[27] = {0};
-  char word[10010] = {0};
+  char word[90000] = {0};
 
-  for (int i = 0; i < 26; i++)
+  for (int i = 0; i < 27; i++)
   {
     letters[i] = (Alp*) calloc (1, sizeof (Alp));
     assert (letters[i]);
@@ -52,8 +52,8 @@ int main ()
   Decoder (letters, &result, word, len);
 
   Free_Tree (result.top);
-  
-  for (int i = result.num_let; i < 26; i++)
+
+  for (int i = result.num_let; i < 27; i++)
     free (letters[i]);
 
 }
@@ -70,7 +70,6 @@ int Letters_Fill (Alp* letters[], Result* result, char word[])
     let = getchar ();
     letters[i]->letter = let;
 
-    //printf("let = %c\n", let);
 
     let = getchar ();
     //printf("let = %c\n", let);
