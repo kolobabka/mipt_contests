@@ -260,6 +260,8 @@ Tree* DeleteElem (Tree* node, KeyType key) {
     Tree* left     = NULL;
     Tree* right    = NULL;
     Tree* minNode = NULL;
+    Tree* tmp = NULL;
+
     if (node == NULL)
         return node;
 
@@ -270,6 +272,12 @@ Tree* DeleteElem (Tree* node, KeyType key) {
     else {
         left  = node->left;
         right = node->right;
+        while (node->next) {
+            node = node->next;
+            free (node->prev->value_3->string);
+            free (node->prev->value_3);
+            free (node->prev);
+        }
         free (node->value_3->string);
         free (node->value_3);
         free (node);
@@ -315,6 +323,8 @@ static char CompareData (Tree* root, InfoType value_1, InfoType value_2, String*
     else   
         return 0;
 }
+//----------------------------------------
+//----------------------------------------
 Tree* FindElem (Tree* root, KeyType key) {
 
     if (root == NULL)
@@ -336,6 +346,8 @@ Tree* FindElem (Tree* root, KeyType key) {
     return root;
 
 }
+//----------------------------------------
+//----------------------------------------
 void DeleteTree (Tree* root) {
 
     if (root == NULL)
@@ -349,6 +361,7 @@ void DeleteTree (Tree* root) {
     
     while (root->next) {
         
+        printf ("root->key? = %u\n", root->key);
         root = root->next;
         free (root->prev->value_3->string);
         free (root->prev->value_3);
@@ -359,4 +372,18 @@ void DeleteTree (Tree* root) {
     free (root->value_3);
     free (root);
 
+}
+//----------------------------------------
+//----------------------------------------
+Tree* FindParent (Tree* parent, Tree* node, KeyType key) {
+
+    if (key == node->key)
+        return parent;
+
+    if (key < node->key)
+        parent = FindParent (node, node->left, key);
+    if (key > node->key)
+        parent = FindParent (node, node->right, key);
+
+    return parent;
 }
