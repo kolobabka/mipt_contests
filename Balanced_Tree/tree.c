@@ -45,25 +45,7 @@ Tree* TreeInit_t () {
 }
 //----------------------------------------
 //----------------------------------------
-static TreeErrors InsertRoot (Tree* root, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3) {
-
-    if (IS_NULL (root)) {
-
-        PrintTreeErr (NULL_POINTER_ON_TREE);
-            return NULL_POINTER_ON_TREE;
-
-    }
-
-    root->key = key;
-    root->value_1 = value_1;
-    root->value_2 = value_2;
-    root->value_3 = value_3;
-
-    return NO_TREE_ERR;    
-}
-//----------------------------------------
-//----------------------------------------
-Tree* CreateNode (Tree* parent, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3) { //TODO: Think about type (errors)
+Tree* CreateNode (KeyType key, InfoType value_1, InfoType value_2, String* value_3) { //TODO: Think about type (errors)
 
     Tree* node = NULL;
 
@@ -79,27 +61,43 @@ Tree* CreateNode (Tree* parent, KeyType key, InfoType value_1, InfoType value_2,
     node->value_1 = value_1;
     node->value_2 = value_2;
     node->value_3 = value_3;
-    node->parent = parent;
 
     return node;    
 }
 //----------------------------------------
 //----------------------------------------
-Tree* InsertIntoTree (Tree* root, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3) {
+Tree* InsertIntoTree (Tree* root, KeyType key, InfoType value_1, InfoType value_2, String* value_3) {
 
-    //Tree* root = NULL;
+    Tree* node = NULL;
     
     if (root == NULL) {
 
-        root = CreateNode (NULL, key, value_1, value_2, value_3);
+        root = CreateNode (key, value_1, value_2, value_3);
         if (IS_NULL (root)) {
 
             PrintTreeErr (NULL_POINTER_ON_TREE);
                 return NULL_POINTER_ON_TREE;
         }
     }
-
     
+    if (key == root->key) {
+        
+        node = root;
+        while (node->next) {
+
+            if (CompareData (node, value_1, value_2, value_3)) 
+                return TreeBalance (root);
+            else
+                node = node->next;
+        }
+        if (CompareData (node, value_1, value_2, value_3)) 
+                return TreeBalance (root);
+
+        node->next = CreateNode (key, value_1, value_2, value_3);
+        node->next->prev = node;
+
+        return TreeBalance (root);
+    }    
 
     if (key < root->key)
 		root->left = InsertIntoTree(root->left, key, value_1, value_2, value_3);
@@ -272,6 +270,8 @@ Tree* DeleteElem (Tree* node, KeyType key) {
     else {
         left  = node->left;
         right = node->right;
+        free (node->value_3->string);
+        free (node->value_3);
         free (node);
 
         if (right == NULL)
@@ -306,3 +306,57 @@ Tree* FindMin (Tree* node) {
 }
 //----------------------------------------
 //----------------------------------------
+static char CompareData (Tree* root, InfoType value_1, InfoType value_2, String* value_3) {
+
+    if (root->value_1 == value_1 &&
+        root->value_2 == value_2 &&
+        !(strcmp (root->value_3->string, value_3->string)))
+        return 1;
+    else   
+        return 0;
+}
+Tree* FindElem (Tree* root, KeyType key) {
+
+    if (root == NULL)
+        return NULL;
+
+    while (root) {
+
+        if (key == root->key)
+            break;            
+        if (key < root->key) 
+            root = root->left;
+        else   
+            root = root->right;
+    }
+
+    if (root == NULL)
+        return NULL;
+    
+    return root;
+
+}
+void DeleteTree (Tree* root) {
+
+    if (root == NULL)
+        return;
+    
+    if (root->left)
+        DeleteTree (root->left);
+    if (root->right)
+        DeleteTree (root->right);
+
+    
+    while (root->next) {
+        
+        root = root->next;
+        free (root->prev->value_3->string);
+        free (root->prev->value_3);
+        free (root->prev);
+    }
+
+    free (root->value_3->string);
+    free (root->value_3);
+    free (root);
+
+}

@@ -3,9 +3,8 @@
 //----------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <assert.h>
-#include <math.h>
+#include <string.h>
 //----------------------------------------
 //----------------------------------------
 #define IS_NULL(ptr)    !ptr
@@ -13,7 +12,7 @@
 //----------------------------------------
 typedef unsigned int KeyType; //Use type "KeyType" instead of the basic type "unsigned int"
 typedef double       InfoType;
-typedef int         Balance;
+typedef int          Balance;
 //----------------------------------------
 //----------------------------------------
 // Declarations of structers and enums
@@ -23,6 +22,29 @@ typedef enum TreeErrors {
     NO_TREE_ERR
 
 }   TreeErrors;
+
+//----------------------------------------
+//----------------------------------------
+enum Commands {
+
+  INSERT,
+  FIND,
+  DELETE,
+  DUMP,
+  NEAR,
+  HELP,
+  ESCAPE
+};
+//----------------------------------------
+//----------------------------------------
+//----------------------------------------
+//----------------------------------------
+typedef struct String {
+
+  char* string;
+  int size;
+
+} String;
 //----------------------------------------
 //----------------------------------------
 typedef struct Tree {
@@ -31,14 +53,16 @@ typedef struct Tree {
     int           height;
   // Key field
     KeyType        key;
-  // Address fields
-    struct Tree*  parent;  
+  // Address fields  
     struct Tree*  left;
     struct Tree*  right;
+
+    struct Tree*  next;
+    struct Tree*  prev;
   // Informational fields 
     InfoType      value_1;
     InfoType      value_2;
-    InfoType      value_3;
+    String*       value_3;
 
 } Tree;
 //----------------------------------------
@@ -53,7 +77,8 @@ typedef struct Root {
 //----------------------------------------
 //----------------------------------------
 //Prototypes of functions
-Tree* InsertIntoTree (Tree* mainRoot, KeyType key, InfoType value_1, InfoType value_2, InfoType value_3);
+static char CompareData (Tree* root, InfoType value_1, InfoType value_2, String* value_3);
+Tree* InsertIntoTree (Tree* mainRoot, KeyType key, InfoType value_1, InfoType value_2, String* value_3);
 TreeErrors TreeInit (Root* mainRoot);
 Tree* RotateLeft (Tree* balanceNode);
 void PrintTreeErr (TreeErrors err);
@@ -65,3 +90,12 @@ Tree* TreeInit_t ();
 Tree* FindMin (Tree* node);
 Tree* DeleteMinElen (Tree* node);
 Tree* DeleteElem (Tree* node, KeyType key);
+Tree* FindElem (Tree* root, KeyType key);
+void DeleteTree (Tree* root);
+void TheStartMenu ();
+void HelpList ();
+char CommandRecognizer (char buffer[1024]);
+void Recalloc (String* value_3);
+void FillString (String* value_3);
+Tree* InsertPars (Tree* root);
+void ReadCommand ();
