@@ -20,7 +20,6 @@ void HelpList () {
 
     printf ("#####\t\t\t\tHelp-list\n\n");
 
-    printf ("#####\t\tEnter \"start\" to begin work with a tree\n");
     printf ("#####\t\tEnter \"insert\" <key> <number> <number> <string> to insert your data\n");
     printf ("#####\t\tEnter \"find\" <key> to find data with a such key\n");
     printf ("#####\t\tEnter \"delete\" <key> to delete data with a such key from the tree\n");

@@ -1,50 +1,6 @@
 #include "tree.h"
 //----------------------------------------
 //----------------------------------------
-TreeErrors TreeInit (Root* mainRoot) {
-
-
-    mainRoot->root = (Tree*) calloc (1, sizeof (Tree));
-
-    if (IS_NULL (mainRoot->root)) {
-
-        PrintTreeErr (NULL_POINTER_ON_TREE);
-            return NULL_POINTER_ON_TREE;
-
-    }
-    // NAN shows root still has no any data 
-    // mainRoot->root->value_1 = NAN; 
-    // mainRoot->root->value_2 = NAN;
-    // mainRoot->root->value_3 = NAN;
-
-    
-
-    return NO_TREE_ERR;
-}
-//----------------------------------------
-//----------------------------------------
-Tree* TreeInit_t () {
-
-    Tree* mainRoot = NULL;
-    mainRoot = (Tree*) calloc (1, sizeof (Tree));
-
-    if (IS_NULL (mainRoot)) {
-
-        PrintTreeErr (NULL_POINTER_ON_TREE);
-            return NULL_POINTER_ON_TREE;
-
-    }
-    // NAN shows root still has no any data 
-    // mainRoot->root->value_1 = NAN; 
-    // mainRoot->root->value_2 = NAN;
-    // mainRoot->root->value_3 = NAN;
-
-    
-
-    return mainRoot;
-}
-//----------------------------------------
-//----------------------------------------
 Tree* CreateNode (KeyType key, InfoType value_1, InfoType value_2, String* value_3) { //TODO: Think about type (errors)
 
     Tree* node = NULL;
@@ -85,13 +41,16 @@ Tree* InsertIntoTree (Tree* root, KeyType key, InfoType value_1, InfoType value_
         node = root;
         while (node->next) {
 
-            if (CompareData (node, value_1, value_2, value_3)) 
+            if (CompareData (node, value_1, value_2, value_3)) {
+
                 return TreeBalance (root);
+            }
             else
                 node = node->next;
         }
-        if (CompareData (node, value_1, value_2, value_3)) 
+        if (CompareData (node, value_1, value_2, value_3)) {
                 return TreeBalance (root);
+        }
 
         node->next = CreateNode (key, value_1, value_2, value_3);
         node->next->prev = node;
