@@ -70,8 +70,7 @@ void ReadCommand () {
             HelpList ();
             break;
         default:
-            printf ("UNKNOWN ERROR!\n");
-            return;
+            break;
         }
     }
 }
@@ -123,10 +122,11 @@ char CommandRecognizer (char buffer[1024]) {
         else
         break;     
     default:
+        printf ("UNKNOWN COMMAND!!!\nPlease, try again\n");
         break;
     }
 
-    printf ("UNKNOWN COMMAND!!!\nPlease, try again\n");
+    
 }
 //----------------------------------------
 //----------------------------------------

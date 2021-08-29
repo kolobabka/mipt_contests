@@ -3,6 +3,6 @@
 int main () {
 
     TheStartMenu ();
-
-    return 0;
 }
+
+

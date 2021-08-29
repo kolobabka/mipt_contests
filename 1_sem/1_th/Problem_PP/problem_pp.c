@@ -60,7 +60,6 @@ unsigned Result (unsigned long long num, unsigned mod, unsigned period) {
 
   res = Fib_Mod (counter, mod);
 
-  return res;
 }
 //..............................................................................
 //..............................................................................

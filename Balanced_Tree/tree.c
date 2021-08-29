@@ -320,7 +320,6 @@ void DeleteTree (Tree* root) {
     
     while (root->next) {
         
-        printf ("root->key? = %u\n", root->key);
         root = root->next;
         free (root->prev->value_3->string);
         free (root->prev->value_3);

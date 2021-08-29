@@ -35,7 +35,7 @@ int main ()
   Result result = {0, 0, NULL};
   int check = 0, len = 0;
   Alp* letters[27] = {0};
-  char word[90000] = {0};
+  char word[200000] = {0};
 
   for (int i = 0; i < 27; i++)
   {
