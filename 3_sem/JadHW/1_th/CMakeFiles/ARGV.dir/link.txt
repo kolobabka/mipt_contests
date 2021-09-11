@@ -1,0 +1,2 @@
+/usr/bin/ar qc libARGV.a  CMakeFiles/ARGV.dir/argv.c.o CMakeFiles/ARGV.dir/main.c.o
+/usr/bin/ranlib libARGV.a

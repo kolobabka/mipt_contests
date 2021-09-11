@@ -167,7 +167,7 @@ struct node_t *read_list(FILE *inp)
   return res;
 }
 
-void delete_list(struct node_t *top)
+	void delete_list(struct node_t *top)
 {
   if (top == NULL)
   {

@@ -33,6 +33,8 @@ int main () {
   List.push_back(1);
   List.push_back(3);
 
+  std::cin >> m >> n;
+
   std::cout << List.back() << "\n";
 
   Triangle_I.pts[0].x = 0;
