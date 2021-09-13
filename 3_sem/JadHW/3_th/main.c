@@ -11,7 +11,7 @@ int main (int argc, char** argv) {
 
     file_1 = open (argv[1], O_RDONLY);
     PerrorCheck (file_1);
-    file_2 = open (argv[2], O_RDWR | O_CREAT, 0777);
+    file_2 = open (argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0777);
     PerrorCheck (file_2);
     
     BizzBuzzer (file_1, file_2, argv);

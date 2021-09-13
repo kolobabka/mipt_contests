@@ -7,10 +7,13 @@
 #include <assert.h>
 #include <limits.h>
 #include <ctype.h>
+#include <errno.h>
 //-----------------------------------------------------------
 //-----------------------------------------------------------
 signed char ArgError (int argc);
 signed char PerrorCheck (int file);
 void BizzBuzzer (int file_1, int file_2, char** argv);
 int ParsNumbers (char* rBuffer, char* wBuffer, int lenght);
-int WriteBizzBuzz (char* buffer, const char* word, int wBufLenght, int lenWord);
+int WordWrite (char* wBuffer, char* wordPtr, int wBufLenght, int* index);
+int NumCases (char* wBuffer, char* wordPtr, int wBufLenght, int sum, int lastNum);
+int WriteBizzBuzz (char* buffer, const char* word, int wBufLenght, const int lenWord);
