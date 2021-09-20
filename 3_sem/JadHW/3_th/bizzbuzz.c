@@ -16,7 +16,7 @@ static int SizeText (char* const textName)
 }
 //-----------------------------------------------------------
 //-----------------------------------------------------------
-signed char ArgError (int argc) {
+signed char ArgError (int argc, char** argv) {
 
     if (argc < 3) {
 
@@ -27,6 +27,12 @@ signed char ArgError (int argc) {
     if (argc > 3) {
 
         printf ("Too many arguments!\n");
+        return 0;
+    }
+
+    if (strcmp (argv[1], argv[2]) == 0) {
+
+        printf ("The identity files!\n");
         return 0;
     }
 
@@ -79,8 +85,6 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
 
     wBufLenght = ParsNumbers (rBuffer, wBuffer, lenght);
 
-    printf ("wBuflenght = %d\n", wBufLenght);
-
     descriptor = write (file_2, wBuffer, wBufLenght);
     if (PerrorCheck (descriptor) == 0) {
 
@@ -97,17 +101,18 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
 int ParsNumbers (char* rBuffer, char* wBuffer, int lenght) {
 
     int  wBufLenght  = 0;
-    int lastIndex    = 0;
-    char lastNum     = 0;
     int index        = 0;
-    int sum          = 0;
+    
     
     char*      wordPtr     = NULL;
     
     while (index <= lenght && rBuffer[index] != '\0') {
 
-        
-        if (index <= lenght && isspace (rBuffer[index])) {
+        int sum         = 0;
+        char lastNum    = 0;
+        int lastIndex   = 0;
+
+        if (index <= lenght && (isspace (rBuffer[index]) || (rBuffer[index] == '\0'))) {
 
             wBuffer[wBufLenght] = rBuffer[index];
             wBufLenght++; 
@@ -117,6 +122,11 @@ int ParsNumbers (char* rBuffer, char* wBuffer, int lenght) {
         wordPtr = rBuffer + index;
         lastIndex = index;
 
+        if (index <= lenght && (rBuffer[index] == '-')) 
+            if (isdigit (rBuffer[index + 1])) 
+                index++;       
+        
+
         while (index <= lenght && rBuffer[index] && isdigit (rBuffer[index])) {
 
             lastNum = rBuffer[index] - '0';
@@ -125,7 +135,7 @@ int ParsNumbers (char* rBuffer, char* wBuffer, int lenght) {
             continue;
         }
 
-        if (index <= lenght && isspace (rBuffer[index])) {
+        if (index <= lenght && (isspace (rBuffer[index]) || (rBuffer[index] == '\0'))) {
             
             wBufLenght = NumCases (wBuffer, wordPtr, wBufLenght, sum, lastNum);
             wBuffer[wBufLenght] = rBuffer[index];
@@ -138,13 +148,15 @@ int ParsNumbers (char* rBuffer, char* wBuffer, int lenght) {
             while (index <= lenght && rBuffer[index] && rBuffer[index] == '0') 
                 index++;
 
-            
-            if (index <= lenght && isspace (rBuffer[index])) {
-
+        
+            if (index <= lenght && (isspace (rBuffer[index]) || (rBuffer[index] == '\0'))) {
+                
                 wBufLenght = NumCases (wBuffer, wordPtr, wBufLenght, sum, lastNum);
+                
                 wBuffer[wBufLenght] = rBuffer[index]; 
                 continue;
             }
+            
         }
 
         index = lastIndex;
@@ -153,84 +165,6 @@ int ParsNumbers (char* rBuffer, char* wBuffer, int lenght) {
     }
 
     return wBufLenght;
-
-    // for (index; index < lenght; ++index) {
-
-    //     int sum     = 0;
-    //     int counter = 0;
-
-    //     printf ("index = %d\n", index);
-    //     if (isspace (rBuffer[index]) != 0)
-    //     {
-    //         wBuffer[wBufLenght] = rBuffer[index];
-    //         ++wBufLenght;
-    //         continue;
-    //     }
-
-    //     while ( (index < lenght) && (isdigit (rBuffer[index]) != 0)) {
-
-    //         lastNum =  rBuffer[index] - '0';            
-    //         sum     += lastNum;
-
-    //         ++counter;
-    //         ++index;
-    //     }
-    //     printf ("index = %d\n", index);
-
-    //     if (rBuffer[index] == '\0') {
-
-    //         printf ("wdffwf\n");
-    //         lastNum = rBuffer[index - 1];
-    //     }
-
-
-    //     if (isspace (rBuffer[index]) != 0 || rBuffer[index] == '\0') {
-            
-    //         if ((sum % 3 == 0) && (lastNum == 0 || lastNum == 5)) {
-
-    //             wBufLenght = WriteBizzBuzz (wBuffer, "bizzbuzz", wBufLenght, bizzbuzzLen);
-                
-    //             wBuffer[wBufLenght] = rBuffer[index];
-    //             ++wBufLenght; 
-    //             continue;
-    //         }
-
-    //         if ((lastNum == 0 || lastNum == 5)) {
-
-    //             wBufLenght = WriteBizzBuzz (wBuffer, "buzz", wBufLenght, buzzLen);
-
-    //             wBuffer[wBufLenght] = rBuffer[index];
-    //             ++wBufLenght; 
-    //             continue;
-    //         }
-
-    //         if ((sum % 3 == 0)) {
-
-    //             wBufLenght = WriteBizzBuzz (wBuffer, "bizz", wBufLenght, bizzLen);
-
-    //             wBuffer[wBufLenght] = rBuffer[index];
-    //             ++wBufLenght; 
-    //             continue;
-    //         }
-    //     }
-    //     else {
-
-            
-    //         while ((index - counter < lenght)) {
-
-                
-    //             wBuffer[wBufLenght] = rBuffer[index - counter];
-    //             ++wBufLenght;
-    //             index++;
-    //         }
-    //         index--; 
-    //         continue;
-    //     }
-
-    // }
-
-    // printf ("%s\n", wBuffer);
-    // return wBufLenght;
 }
 //-----------------------------------------------------------
 //-----------------------------------------------------------
@@ -250,7 +184,6 @@ int WriteBizzBuzz (char* buffer, const char* word, int wBufLenght, const int len
 //-----------------------------------------------------------
 int NumCases (char* wBuffer, char* wordPtr, int wBufLenght, int sum, int lastNum) {
 
-    int index = 0;
     assert (wordPtr);
     int left_tmp = 0;
 
@@ -281,7 +214,7 @@ int WordWrite (char* wBuffer, char* wordPtr, int wBufLenght, int* index) {
     int counter = 0;
     assert (wordPtr);
 
-    while (wordPtr[counter] && !(isspace (wordPtr[counter]))) {
+    while (wordPtr[counter] && !(isspace (wordPtr[counter])) && !(wordPtr[counter] == '\0')) {
 
         wBuffer[wBufLenght] = wordPtr[counter];
         ++(*index);

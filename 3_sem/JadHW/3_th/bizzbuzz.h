@@ -8,9 +8,10 @@
 #include <limits.h>
 #include <ctype.h>
 #include <errno.h>
+#include <string.h>
 //-----------------------------------------------------------
 //-----------------------------------------------------------
-signed char ArgError (int argc);
+signed char ArgError (int argc, char** argv);
 signed char PerrorCheck (int file);
 void BizzBuzzer (int file_1, int file_2, char** argv);
 int ParsNumbers (char* rBuffer, char* wBuffer, int lenght);

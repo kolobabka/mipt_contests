@@ -6,7 +6,7 @@ int main (int argc, char** argv) {
     int file_1 = 0;
     int file_2 = 0;
 
-    if (ArgError (argc) == 0) 
+    if (ArgError (argc, argv) == 0) 
         return -1;
 
     file_1 = open (argv[1], O_RDONLY);

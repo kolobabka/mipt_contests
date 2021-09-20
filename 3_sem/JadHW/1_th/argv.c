@@ -12,7 +12,7 @@ void ResultFunction (int argc, char** argv) {
         int counter =  0;
         char flag   = -1;
 
-        if (argv[index][counter] == '-' )
+        if (argv[index][counter] == '-' || argv[index][counter] == '+' )
             counter++;
 
         while (argv[index][counter] != '\0') {
@@ -37,19 +37,19 @@ void ResultFunction (int argc, char** argv) {
 
         if (sum % 3 == 0 && (lastNum == 5 || lastNum == 0)) {
 
-            printf ("bizbaz\n");
+            printf ("bizzbuzz\n");
             continue;
         }
 
         if (sum % 3 == 0) {
 
-            printf ("biz\n");
+            printf ("bizz\n");
             continue;
         }
 
         if (lastNum == 5 || lastNum == 0) {
 
-            printf ("baz\n");
+            printf ("buzz\n");
             continue;
         }
 
