@@ -55,11 +55,113 @@ namespace caches {
 
         Cache_2Q (size_t size) : 
             cacheSize (size), 
-            In  (size / 5),
             Hot (size / 5),
-            Out (size - size / 5 - size / 5) {}
+            Out (3 * (size / 5)),
+            In (size - (3* (size / 5)) - (size / 5)) {}
 
         ~Cache_2Q () {}
+
+        
+        int CacheHit (size_t numPages) {
+
+            int numHit = 0;
+
+            for (size_t i = 0; i < numPages; i++) {
+
+                Data data;
+                std::cin >> data;
+
+                assert (std::cin.good ());
+                
+                auto page = Map.find (data);
+
+                if (page == Map.end ()) {
+                    
+                    ListNode<Data>node = {data, IN};
+                    if (In.IsFull ()) {
+
+                        auto backList = Map.find(In.List.back().data);
+
+                        if (!Out.IsFull ()) {
+                        
+                            backList->second->place = OUT;
+                            Out.List.splice(Out.List.begin(), In.List, backList->second);
+
+                        }
+                        else {
+
+                            if (Out.List.size () == 0) {
+
+                                Map.erase (backList);
+                                In.List.pop_back();
+                                In.List.push_front (node);
+                                Map.insert({data, In.List.begin()});
+
+                                continue;
+                            }
+
+                            auto backOut = Map.find(Out.List.back().data);
+                            Map.erase(backOut);
+                            Out.List.pop_back();
+
+                            backList->second->place = OUT;
+                            Out.List.splice(Out.List.begin(), In.List, backList->second);
+
+                        }
+
+                        In.List.push_front (node);
+                        Map.insert({data, In.List.begin()});
+
+                    }
+                    else {
+
+                        In.List.push_front (node);
+                        Map.insert({data, In.List.begin()});
+                    }
+
+                }
+                else {
+
+                    if (page->second->place == IN) {
+
+                        ++numHit;
+                        continue;
+                    }
+
+                    if (page->second->place == OUT) {
+
+                        if (!Hot.IsFull ()) {
+
+                            page->second->place = HOT;
+                            Hot.List.splice(Hot.List.begin(), Out.List, page->second);
+
+                            ++numHit;
+                            continue;
+                        }
+                        else {
+
+                            auto backHot = Map.find(Hot.List.back().data);
+                            Map.erase(backHot);
+                            Hot.List.pop_back();
+
+                            page->second->place = HOT;
+                            Hot.List.splice(Hot.List.begin(), Out.List, page->second);
+
+                            ++numHit;
+                            continue;
+                        }
+                    }
+                    if (page->second->place == HOT) {
+
+                        Hot.List.splice(Hot.List.begin(), Hot.List, page->second);
+                        ++numHit;
+                    }
+                }
+
+            }
+
+        return numHit;
+        }
     };
 }
 //--------------------------------------------------------

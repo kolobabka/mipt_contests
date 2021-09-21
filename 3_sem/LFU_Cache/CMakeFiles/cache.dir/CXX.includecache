@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/cache.hpp
+iostream
+-
+unordered_map
+-
+list
+-
+iterator
+-
+cassert
+-
+
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/main.cpp
+cache.hpp
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/cache.hpp
+
