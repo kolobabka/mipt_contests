@@ -13,14 +13,10 @@ double get_time()
 
 int main () {
 
-    FILE* ftest;
-    FILE* fansw;      
+    FILE* ftest;    
 
-    const char* nameTests[numTests] = {"Ilab_KI/2q_cache/tests/test1.txt", "Ilab_KI/2q_cache/tests/test2.txt", "Ilab_KI/2q_cache/tests/test3.txt", "Ilab_KI/2q_cache/tests/test4.txt", "Ilab_KI/2q_cache/tests/test5.txt",
-                                   "Ilab_KI/2q_cache/tests/test6.txt", "Ilab_KI/2q_cache/tests/test7.txt", "Ilab_KI/2q_cache/tests/test8.txt", "Ilab_KI/2q_cache/tests/test9.txt"};
-    
-    const char* nameAnswers[numTests] = {"Ilab_KI/2q_cache/tests/answer1.txt", "Ilab_KI/2q_cache/tests/answer2.txt", "Ilab_KI/2q_cache/tests/answer3.txt", "Ilab_KI/2q_cache/tests/answer4.txt", "Ilab_KI/2q_cache/tests/answer5.txt",
-                                   "Ilab_KI/2q_cache/tests/answer6.txt", "Ilab_KI/2q_cache/tests/answer7.txt", "Ilab_KI/2q_cache/tests/answer8.txt", "Ilab_KI/2q_cache/tests/answer9.txt"};
+    const char* nameTests[numTests] = {"test1.txt", "test2.txt", "test3.txt", "test4.txt", "test5.txt",
+                                       "test6.txt", "test7.txt", "test8.txt", "test9.txt"};
 
     std::string str[numTests];
     std::string answers[numTests];
