@@ -11,18 +11,17 @@
 #include <string.h>
 //-----------------------------------------------------------
 //-----------------------------------------------------------
-#define RSIZE 6
-#define WSIZE 800
+#define RSIZE 1000000
 //-----------------------------------------------------------
 //-----------------------------------------------------------
-signed char ArgError (int argc, char** argv);
 signed char PerrorCheck (int file);
+signed char ArgError (int argc, char** argv);
 void BizzBuzzer (int file_1, int file_2, char** argv);
-// long long ParsNumbers (char* rBuffer, char* wBuffer, long long length, int* wholeWord);
-int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long length, long long totLength);
-// RBUFFER???? FILE_1??????
-long long NumCases (const char* rBuffer, const int sum, const int lastNum, long long shift, int file_1, int file_2);
-int ToFile (int file_1, int file_2, long long shift, long long index, const long long totlength);
 long long WordWrite (int file_1, int file_2, long long shift);
+long long NumCases (const int sum, const int lastNum, int file_2);
+int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long length);
+int ToFile (int file_1, int file_2, long long shift, long long index, const long long totlength);
+long long Overflow (long long index, const char* rBuffer, int sum, int lastNum, int shift, int file_1, int file_2);
 //-----------------------------------------------------------
 //-----------------------------------------------------------
+#define Check if(PerrorCheck (descriptor) == 0) return 1
