@@ -89,6 +89,7 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
     int sum         = 0;
     int offset      = 0;
     int lastNum     = 0;
+    char symb       = 'A';
 
     while (index < length) {
 
@@ -98,15 +99,16 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
             if (PerrorCheck (descriptor) == 0) 
                 return 1;
             
+            
             ++index;
             continue;
         }
 
+        if (rBuffer[index] == '-')
+            index++;
+
         if (isdigit (rBuffer[index])) {
 
-            descriptor = write (file_2, rBuffer + index, 1);
-            if (PerrorCheck (descriptor) == 0) 
-                return 1;
             lastNum = rBuffer[index] - '0';
             sum += lastNum;
             sum %= 3;
@@ -117,35 +119,38 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
         if (index >= length) {
             
             long long lastShift = 0;
-            char symb = rBuffer[index - 1];
+            symb = rBuffer[index - 1];
             lastShift = shift;
-
-            if (isspace (rBuffer[index])) {
-
-                NumCases (rBuffer, sum, lastNum, shift, file_1, file_2);  
-                shift = 0; 
-                sum = 0;
-                return index;
-            }
 
             while (!(isspace(symb))) {
                 
                 descriptor = read (file_1, &symb, 1);
                 if (PerrorCheck (descriptor) == 0) 
                     return 1;
-
-                descriptor = write (file_2, &symb, 1); //Maybe a bit later???
-                if (PerrorCheck (descriptor) == 0) 
-                    return 1;
                 
-                ++shift;
+                if (descriptor > 0)
+                    ++shift;
 
-                if (isspace (symb)) {
+                if (isspace (symb) || descriptor == 0) {
 
                     offset = NumCases (rBuffer, sum, lastNum, shift, file_1, file_2);  
-                    if (offset == 0) {
+                    if (offset == -1) {
                         
-                        descriptor = write (file_2, &symb, 1); //Maybe a bit later???
+                        lseek (file_1, -shift, SEEK_CUR);
+                        for (int i = 0; i < shift; i++) {
+
+                            descriptor = read (file_1, &symb, 1);
+                            if (PerrorCheck (descriptor) == 0) 
+                                return 1;
+
+                            descriptor = write (file_2, &symb, 1);
+                            if (PerrorCheck (descriptor) == 0) 
+                                return 1;
+                        }
+                    }
+                    if (offset == 0 && descriptor != 0) {
+
+                        descriptor = write (file_2, &symb, 1);
                         if (PerrorCheck (descriptor) == 0) 
                             return 1;
                     }
@@ -165,11 +170,55 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
 
         if (index < length && isspace (rBuffer[index])) {
 
-            NumCases (rBuffer, sum, lastNum, shift, file_1, file_2);  
-            shift = 0; 
+            offset = NumCases (rBuffer, sum, lastNum, shift, file_1, file_2);
+
+            if (offset == 0) {
+
+                shift = 0; 
+                sum = 0;
+                continue;
+            }
+
+            descriptor = write (file_2, rBuffer + index - shift, shift); 
+            if (PerrorCheck (length) == 0) 
+                return 1;
+                
+            shift = 0;
             sum = 0;
             continue;
         }  
+
+       
+        if (!(isdigit (rBuffer[index]))) {
+
+            descriptor = write (file_2, rBuffer + index - shift, shift + 1);
+            ++index;
+
+            while (index < length && (!(isspace (rBuffer[index]) && descriptor > 0 && rBuffer[index] != '\0'))) {
+
+                descriptor = write (file_2, rBuffer + index, 1);
+
+                printf (" wefw = %d", descriptor); 
+                index++;
+            }
+            shift = 0;
+            sum = 0;
+
+            if (index >= length) {
+        
+                while (!(isspace (symb))) {
+                    
+                    descriptor = read (file_1, &symb, 1);
+                    if (descriptor > 0)
+                        write (file_2, &symb, 1);
+                    else 
+                        return index + shift;
+                    shift++;
+                    
+                }
+                return index + shift;
+            }
+        }
         
     }
 
@@ -182,7 +231,7 @@ long long NumCases (const char* rBuffer, const int sum, const int lastNum, long 
     int offset     = 0;
     assert (rBuffer);
 
-    offset = lseek (file_2, -shift, SEEK_CUR);
+    // offset = lseek (file_2, -shift, SEEK_CUR);
     if (offset == 1L) {
 
         printf ("Error!\n");
@@ -215,12 +264,12 @@ long long NumCases (const char* rBuffer, const int sum, const int lastNum, long 
 
         return 0;
     }
-    offset = lseek (file_2, shift, SEEK_CUR);
-    if (offset == 1L) {
+    // offset = lseek (file_2, shift, SEEK_CUR);
+    // if (offset == 1L) {
 
-        printf ("Error!\n");
-        return 1;
-    }
+    //     printf ("Error!\n");
+    //     return 1;
+    // }
     return -1;
 
 
