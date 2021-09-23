@@ -63,8 +63,6 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
     long long wBuflength = 0;
 
     totlength = SizeText (argv[1]);   
-    
-    printf ("%lld\n", totlength);
 
     while (totlength > 0 && length > 0) {
 
@@ -74,7 +72,8 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
 
         length = SepParsNumbers (file_1, file_2, rBuffer, length, totlength);
         totlength -= length;
-        printf ("totlength = %lld\n", totlength);
+        printf ("LLLLENGTH = %lld\n", length);
+        printf ("totLength = %lld\n", totlength);
     }
 
 }
@@ -83,6 +82,7 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
 
 int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long length, long long totLength) {
     
+    int delMe       = 0;
     int descriptor  = 0;
     long long shift = 0;
     long long index = 0;
@@ -104,8 +104,23 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
             continue;
         }
 
-        if (rBuffer[index] == '-')
+        if (rBuffer[index] == '-') {
+
+            shift++;
             index++;
+        
+
+            if (index < length && isspace (rBuffer[index])) {
+
+                descriptor = write (file_2, rBuffer + index - 1, 1);
+                if (PerrorCheck (descriptor) == 0) 
+                    return 1;
+                shift = 0;
+                continue;
+            }
+        }
+
+
 
         if (isdigit (rBuffer[index])) {
 
@@ -121,10 +136,25 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
             long long lastShift = 0;
             symb = rBuffer[index - 1];
             lastShift = shift;
+            if (symb == '-') {
+
+                descriptor = read (file_1, &symb, 1);
+                delMe++;
+                if (PerrorCheck (descriptor) == 0) 
+                    return 1;
+
+                if ((isspace (symb)) || descriptor == 0) {
+
+                    offset = lseek (file_1, -1, SEEK_CUR);
+                    write (file_2, rBuffer + index - 1, 1);
+                }
+            }
+            symb = rBuffer[index - 1];
 
             while (!(isspace(symb))) {
                 
                 descriptor = read (file_1, &symb, 1);
+                delMe++;
                 if (PerrorCheck (descriptor) == 0) 
                     return 1;
                 
@@ -140,6 +170,7 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
                         for (int i = 0; i < shift; i++) {
 
                             descriptor = read (file_1, &symb, 1);
+                            delMe++;
                             if (PerrorCheck (descriptor) == 0) 
                                 return 1;
 
@@ -162,8 +193,27 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
                     lastNum = symb - '0';
                     sum += lastNum;
                     sum %= 3;
-                    // ++shift;
-                    // ++index;
+                }
+                if (!(isdigit (symb))) {
+
+                    lseek (file_1, -shift, SEEK_CUR);
+                    symb = 'A';
+                    shift = 0;
+
+                    while (!(isspace (symb))) {
+                    
+                        descriptor = read (file_1, &symb, 1);
+                        delMe++;
+                        shift++;
+                        if (descriptor > 0)
+                            descriptor = write (file_2, &symb, 1);
+                        else 
+                            return index + shift - lastShift;
+                        
+                    
+                    } 
+                    printf ("DelMe = %d\n", delMe);
+                    return index + shift - lastShift;
                 }
             }
         }
@@ -198,7 +248,6 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
 
                 descriptor = write (file_2, rBuffer + index, 1);
 
-                printf (" wefw = %d", descriptor); 
                 index++;
             }
             shift = 0;
@@ -210,7 +259,7 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
                     
                     descriptor = read (file_1, &symb, 1);
                     if (descriptor > 0)
-                        write (file_2, &symb, 1);
+                        descriptor = write (file_2, &symb, 1);
                     else 
                         return index + shift;
                     shift++;
@@ -231,7 +280,6 @@ long long NumCases (const char* rBuffer, const int sum, const int lastNum, long 
     int offset     = 0;
     assert (rBuffer);
 
-    // offset = lseek (file_2, -shift, SEEK_CUR);
     if (offset == 1L) {
 
         printf ("Error!\n");
@@ -264,14 +312,6 @@ long long NumCases (const char* rBuffer, const int sum, const int lastNum, long 
 
         return 0;
     }
-    // offset = lseek (file_2, shift, SEEK_CUR);
-    // if (offset == 1L) {
 
-    //     printf ("Error!\n");
-    //     return 1;
-    // }
     return -1;
-
-
-    // return (WordWrite (file_1, file_2, shift));
 }
