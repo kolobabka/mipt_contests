@@ -23,12 +23,12 @@ void BizzBuzzer (int file_1, int file_2, char** argv) {
 
     char rBuffer[RSIZE] = {0};
 
-    totLength = SizeText (argv[1]);   
+    totLength = SizeText (argv[1]);
 
     while (totLength > 0 && length > 0) {
 
         length = read (file_1, rBuffer, RSIZE);
-        if (PerrorCheck (length) == 0) 
+        if (PerrorCheck (length) == 0)
             return;
 
         length = SepParsNumbers (file_1, file_2, rBuffer, length);
@@ -54,7 +54,7 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
 
             descriptor = write (file_2, rBuffer + index, 1);
             Check;
-            
+
             ++index;
             continue;
         }
@@ -63,7 +63,7 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
 
             shift++;
             index++;
-        
+
 
             if (index < length && isspace (rBuffer[index])) {
 
@@ -83,9 +83,9 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
             ++shift;
             ++index;
         }
-            
+
         if (index >= length) {
-            
+
             return (Overflow (index, rBuffer, sum, lastNum, shift, file_1, file_2));
         }
 
@@ -95,20 +95,20 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
 
             if (offset == 0) {
 
-                shift = 0; 
+                shift = 0;
                 sum = 0;
                 continue;
             }
 
-            descriptor = write (file_2, rBuffer + index - shift, shift); 
+            descriptor = write (file_2, rBuffer + index - shift, shift);
             Check;
-                
+
             shift = 0;
             sum = 0;
             continue;
-        }  
+        }
 
-       
+
         if (!(isdigit (rBuffer[index]))) {
 
             descriptor = write (file_2, rBuffer + index - shift, shift + 1);
@@ -124,16 +124,16 @@ int SepParsNumbers (int file_1, int file_2, const char* rBuffer, long long lengt
             sum = 0;
 
             if (index >= length) {
-        
+
                 while (!(isspace (symb))) {
-                    
+
                     descriptor = read (file_1, &symb, 1);
                     if (descriptor > 0)
                         descriptor = write (file_2, &symb, 1);
-                    else 
+                    else
                         return index + shift;
                     shift++;
-                    
+
                 }
                 return index + shift;
             }
@@ -158,7 +158,7 @@ long long NumCases (const int sum, const int lastNum, int file_2) {
     if (((sum % 3) == 0) && (lastNum == 5 || lastNum == 0)) {
 
         descriptor = write (file_2, "BizzBuzz", bizzbuzzLen);
-        Check; 
+        Check;
 
         return 0;
     }
@@ -166,7 +166,7 @@ long long NumCases (const int sum, const int lastNum, int file_2) {
     if ((lastNum == 5 || lastNum == 0)) {
 
         descriptor = write (file_2, "Buzz", buzzLen);
-        Check; 
+        Check;
 
         return 0;
     }
@@ -174,7 +174,7 @@ long long NumCases (const int sum, const int lastNum, int file_2) {
     if ((sum % 3) == 0) {
 
         descriptor = write (file_2, "Bizz", bizzLen);
-        Check; 
+        Check;
 
         return 0;
     }
@@ -195,7 +195,7 @@ long long Overflow (long long index, const char* rBuffer, int sum, int lastNum, 
     if (symb == '-') {
 
         descriptor = read (file_1, &symb, 1);
-        Check; 
+        Check;
 
         if ((isspace (symb)) || descriptor == 0) {
 
@@ -206,32 +206,32 @@ long long Overflow (long long index, const char* rBuffer, int sum, int lastNum, 
     symb = rBuffer[index - 1];
 
     while (!(isspace(symb))) {
-        
+
         descriptor = read (file_1, &symb, 1);
-        Check; 
-        
+        Check;
+
         if (descriptor > 0)
             ++shift;
 
         if (isspace (symb) || descriptor == 0) {
 
-            offset = NumCases (sum, lastNum, file_2);  
+            offset = NumCases (sum, lastNum, file_2);
             if (offset == -1) {
-                
+
                 lseek (file_1, -shift, SEEK_CUR);
                 for (int i = 0; i < shift; i++) {
 
                     descriptor = read (file_1, &symb, 1);
-                    Check; 
+                    Check;
 
                     descriptor = write (file_2, &symb, 1);
-                    Check; 
+                    Check;
                 }
             }
             if (offset == 0 && descriptor != 0) {
 
                 descriptor = write (file_2, &symb, 1);
-                Check; 
+                Check;
             }
 
             return index + shift - lastShift;
@@ -249,19 +249,32 @@ long long Overflow (long long index, const char* rBuffer, int sum, int lastNum, 
             shift = 0;
 
             while (!(isspace (symb))) {
-            
+
                 descriptor = read (file_1, &symb, 1);
-                Check; 
+                Check;
 
                 shift++;
                 if (descriptor > 0)
                     descriptor = write (file_2, &symb, 1);
-                else 
+                else
                     return index + shift - lastShift;
-            } 
+            }
 
             return index + shift - lastShift;
         }
     }
     return index;
 }
+
+// void FileGenerator () {
+//
+//   int file_1 = 0;
+//
+//   file_1 = open ("Big", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+//   PerrorCheck (file_1);
+//
+//   write (file_1, "3", 1024*1024*1024);
+//
+//
+//   close (file_1);
+// }
