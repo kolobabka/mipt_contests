@@ -23,8 +23,8 @@ int Det_Matrix (double** matrix, int size);
 //..............................................................................
 int main ()
 {
-  int det = 0;
-  int size = 0;
+  int det = 5;
+  int size = 10;
   double** matrix = NULL;
   max_t elem = {};
   int flag = 0;
@@ -50,7 +50,7 @@ int main ()
   // matrix = Matrix_Generate (det, size, matrix);
   // matrix = Rand_Matrix_Generate (size, matrix);
 
-  //Print_Matrix (size, matrix);
+  Print_Matrix (size, matrix);
 
 
   //
@@ -68,28 +68,24 @@ int main ()
 
   // Print_Matrix (size, matrix);
   //
-
+#if 1
   for (int i = 0; i < size; i++)
   {
     elem = max_submatrix_element (matrix, i, size);
 
-    // printf("elem = %lg\ncol = %d\n,row = %d\n", elem.max, elem.col, elem.row);
-
-    // printf("\t\t\tBEFORE SWAP\n");
-    // Print_Matrix (size, matrix);
 
     matrix = swap_columns (matrix, i, elem, size);
     if (elem.col != i)
       sign++;
     elem.col = i;
-    // printf("\t\t\tAFTER SWAP_CPL\n");
-    //Print_Matrix (size, matrix);
+    printf("\t\t\tAFTER SWAP_COL\n");
+    Print_Matrix (size, matrix);
     matrix = swap_rows (matrix, i, elem, size);
     if (elem.row != i)
       sign++;
     elem.row = i;
-     //printf("\t\t\tAFTER SWAP_ROWS\n");
-    //Print_Matrix (size, matrix);
+     printf("\t\t\tAFTER SWAP_ROWS\n");
+    Print_Matrix (size, matrix);
 
     //Print_Matrix (size, matrix);
     //printf("\n\n");
@@ -122,6 +118,7 @@ int main ()
     free (matrix[i]);
   }
   free (matrix);
+#endif
 }
 
 double** Matrix_Generate (int det, int size, double** matrix)
@@ -265,6 +262,8 @@ max_t max_submatrix_element(double** matrix, int current, int size)
 double** eliminate(double** matrix, int current, int size)
 {
   double coeff = 0.0;
+  assert (matrix);
+  assert (matrix[current]);
   assert (matrix[current][current]);
 
   for (int i = current + 1; i < size; i++)

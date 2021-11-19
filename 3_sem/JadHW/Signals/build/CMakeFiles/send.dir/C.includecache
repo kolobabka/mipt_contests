@@ -1,0 +1,54 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/JadHW/Signals/errors.c
+signals.h
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/JadHW/Signals/signals.h
+
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/JadHW/Signals/send.c
+signals.h
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/JadHW/Signals/signals.h
+
+/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/JadHW/Signals/signals.h
+sys/types.h
+-
+unistd.h
+-
+sys/types.h
+-
+sys/wait.h
+-
+stdio.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
+signal.h
+-
+unistd.h
+-
+stdlib.h
+-
+assert.h
+-
+limits.h
+-
+ctype.h
+-
+time.h
+-
+errno.h
+-
+string.h
+-
+stdio.h
+-
+

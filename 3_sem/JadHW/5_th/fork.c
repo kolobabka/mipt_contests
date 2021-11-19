@@ -50,7 +50,7 @@ int main () {
 
         if (pid == 0) {
             
-            args = sprintf (buf, "MyPid = %d\nParentPid = %d\n", getpid (), getppid ());
+            args = sprintf (buf, "MyPid = %d ParentPid = %d\n", getpid (), getppid ());
 
             err = write (file, buf, args);
             if ((PerrorCheck (err)) == 0)
@@ -58,8 +58,6 @@ int main () {
 
             return 0;     
         }
-
-        printf ("PPid = %d\n", pid);
 
         retVal = waitpid (pid, &waitstatus, 0);
 
@@ -69,7 +67,7 @@ int main () {
             return -1;
         }
 
-        args = sprintf (buf, "ChildPid = %d\n", retVal);
+        args = sprintf (buf, "ChildPid = %d, retVal = %d\n", retVal, waitstatus);
 
         err = write (file, buf, args);
         if ((PerrorCheck (err)) == 0) {

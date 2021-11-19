@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/BizzBuzz.dir/sources/bizzbuzz.c.o CMakeFiles/BizzBuzz.dir/sources/errors.c.o CMakeFiles/BizzBuzz.dir/sources/main.c.o  -o BizzBuzz 

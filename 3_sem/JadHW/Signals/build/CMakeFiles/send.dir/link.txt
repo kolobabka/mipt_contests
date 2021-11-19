@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/send.dir/send.c.o CMakeFiles/send.dir/errors.c.o  -o send 
