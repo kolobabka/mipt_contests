@@ -1,3 +1,0 @@
-/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/CMakeFiles/rebuild_cache.dir
-/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/CMakeFiles/edit_cache.dir
-/home/kolobaka2000/Рабочий стол/mipt_contests/3_sem/LFU_Cache/CMakeFiles/cache.dir

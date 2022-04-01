@@ -1,4 +1,0 @@
-MOVI 112
-OUT X
-IN B
-ADD B, D
