@@ -1,1 +1,0 @@
-/usr/bin/cc    CMakeFiles/recieve.dir/recieve.c.o CMakeFiles/recieve.dir/errors.c.o  -o recieve 

@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "signals.h": "c",
-        "type_traits": "c"
-    }
-}

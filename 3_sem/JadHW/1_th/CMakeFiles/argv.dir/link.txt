@@ -1,1 +1,0 @@
-/usr/bin/cc    CMakeFiles/argv.dir/argv.c.o CMakeFiles/argv.dir/main.c.o  -o argv  libARGV.a 
